@@ -1,4 +1,4 @@
-package com.dladeji.earthquake;
+package com.dladeji.earthquake.dtos;
 
 import lombok.Data;
 
