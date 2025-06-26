@@ -1,5 +1,6 @@
 package com.dladeji.earthquake;
 
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -37,8 +38,14 @@ public class Controller {
 
     private void createEarthquakeInstances(Feature[] quakeData){
         for (int i=0; i<quakeData.length; i++){
-            var quake = new Quake(quakeData[i].getProperties());
-            quakeRepository.save(quake);
+            try {
+                var quake = new Quake(quakeData[i].getProperties());
+                quakeRepository.save(quake);
+            } catch (DataIntegrityViolationException e){
+                System.out.println("Unique Error Happened");
+                System.out.println(e);
+                continue;
+            }
         }
     }
     

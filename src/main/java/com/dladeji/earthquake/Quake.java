@@ -31,6 +31,9 @@ public class Quake {
     @Column(name = "mag")
     private double mag;
 
+    @Column(name = "title")
+    private String title;
+
     @Column(name = "type")
     private String type;
 
@@ -49,6 +52,7 @@ public class Quake {
     public Quake(Property quakeData){
         this.country = "N/A";
         this.city = "N/A";
+        this.title = quakeData.getTitle();
         this.mag = quakeData.getMag();
         this.type = quakeData.getType();
         this.place = quakeData.getPlace();
