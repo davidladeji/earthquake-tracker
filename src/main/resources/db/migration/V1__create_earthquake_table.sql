@@ -1,4 +1,4 @@
-CREATE Table earthquake (
+CREATE Table earthquakes (
     id          BIGINT AUTO_INCREMENT NOT NULL,
     mag         DOUBLE NOT NULL,
     type        VARCHAR(255) NOT NULL,
