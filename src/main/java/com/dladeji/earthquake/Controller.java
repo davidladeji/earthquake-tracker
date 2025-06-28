@@ -17,6 +17,7 @@ public class Controller {
 
     private final ApiService apiService;
 
+    // TODO: Make fetch occur at start of app
     @GetMapping("/url")
     public ResponseEntity<?> fetchQuakes() {
         // TODO: Return Better Success Message

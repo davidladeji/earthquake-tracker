@@ -43,8 +43,13 @@ public class ApiService {
         return quakeRepository.getCountByType();
     }
 
-    // TODO: Create a truly unique column to differentiate earthquake table entries
-    // I'm thinking (Title) + (Time) in milliseconds as that is simpler
+    /* TODO: Create a truly unique column to differentiate earthquake table entries
+       I'm thinking (Title) + (Time) in milliseconds as that is simpler
+    */
+
+
+    /* TODO: Create a logger, especially for SQL queries
+    */
 
     private <T> Flux<T> parseResponseJsonArray(Flux<DataBuffer> dataBuffers, String arrayField, Class<T> classType){
         ObjectMapper mapper = new ObjectMapper();
@@ -59,7 +64,7 @@ public class ApiService {
                 // Find the start of features array
                 while(!parser.isClosed()){
                     JsonToken token = parser.nextToken();
-                    if (JsonToken.FIELD_NAME.equals(token) && arrayField.equals(parser.getCurrentName())){
+                    if (JsonToken.FIELD_NAME.equals(token) && arrayField.equals(parser.currentName())){
                         token = parser.nextToken();
                         if( !JsonToken.START_ARRAY.equals(token)){
                             sink.error(new RuntimeException("Expected an array for field " + arrayField));

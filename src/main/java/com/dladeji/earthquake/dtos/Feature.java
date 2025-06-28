@@ -10,6 +10,4 @@ public class Feature{
     private String type;
     private Map<String, Object> properties;
     private Map<String, Object> geometry;
-    // private Property properties;
-    // private Object geometry;
 }
