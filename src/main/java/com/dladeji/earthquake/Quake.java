@@ -64,7 +64,7 @@ public class Quake {
         String[] places = place.split(",");
         if (places.length > 1){
             this.country = places[1].trim();
-            // City isn't really important
+            // City isn't really important right now
         }
     }
 
