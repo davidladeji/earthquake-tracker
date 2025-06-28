@@ -2,6 +2,7 @@ package com.dladeji.earthquake;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -10,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.dladeji.earthquake.dtos.Feature;
+import com.dladeji.earthquake.dtos.QuakeCountDto;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -35,6 +37,10 @@ public class ApiService {
                 .transform(dataBufferFlux -> parseResponseJsonArray(dataBufferFlux, "features", Feature.class));
 
                 return featureFlux.collectList().block().size();
+    }
+
+    public List<QuakeCountDto> getQuakeCounts(){
+        return quakeRepository.getCountByType();
     }
 
     // TODO: Create a truly unique column to differentiate earthquake table entries
