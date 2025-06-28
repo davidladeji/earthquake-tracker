@@ -3,9 +3,6 @@ package com.dladeji.earthquake;
 import java.io.IOException;
 import java.io.InputStream;
 
-import com.fasterxml.jackson.core.JsonParser;
-import com.fasterxml.jackson.core.JsonToken;
-
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -14,9 +11,10 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.dladeji.earthquake.dtos.ApiResponse;
 import com.dladeji.earthquake.dtos.Feature;
 import com.fasterxml.jackson.core.JsonFactory;
+import com.fasterxml.jackson.core.JsonParser;
+import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import lombok.AllArgsConstructor;
@@ -29,33 +27,26 @@ import reactor.core.publisher.Flux;
 public class Controller {
 
     private final WebClient webClient = WebClient.create("https://earthquake.usgs.gov/fdsnws/event/1/");
-    private final String simpleQueryUri = "/query?format=geojson&starttime=2024-06-20&endtime=2024-07-20";
-    private final String largeQueryUri = "/query?format=geojson&starttime=2025-06-20&endtime=2026-06-20";
+    private final String simpleQueryUri = "/query?format=geojson&starttime=2025-06-20&endtime=2026-06-20&alertlevel=green";
+    private final String largeQueryUri = "/query?format=geojson&starttime=2024-06-20&endtime=2024-07-20";
     private final QuakeRepository quakeRepository;
     
 
     @GetMapping("/url")
     public ResponseEntity<?> fetchApiData() {
-        // var response = webClient.get()
-        //         .uri(simpleQueryUri)
-        //         .retrieve()
-        //         .bodyToMono(ApiResponse.class)
-        //         .block();
-
         var featureFlux = webClient.get()
-                .uri(simpleQueryUri)
+                .uri(largeQueryUri)
                 .retrieve()
                 .bodyToFlux(DataBuffer.class)
                 .transform(dataBufferFlux -> parseLargeJsonArray(dataBufferFlux, "features", Feature.class));
-
-            
-                
-
-        // createEarthquakeInstances(response.getFeatures());    
+  
         return ResponseEntity.ok().body(featureFlux.collectList().block().size());
     }
 
-    private static <T> Flux<T> parseLargeJsonArray(Flux<DataBuffer> dataBuffers, String arrayField, Class<T> classType){
+    // TODO: Create a truly unique column to differentiate earthquake table entries
+    // I'm thinking (Title) + (Time) in milliseconds as that is simpler
+
+    private <T> Flux<T> parseLargeJsonArray(Flux<DataBuffer> dataBuffers, String arrayField, Class<T> classType){
         ObjectMapper mapper = new ObjectMapper();
 
         return Flux.create(sink -> {
@@ -79,13 +70,14 @@ public class Controller {
                         while (parser.nextToken() != JsonToken.END_ARRAY) {
                             T item = mapper.readValue(parser, classType);
                             sink.next(item);
+                            createEarthquakeInstance(item); // Create Quake object
                         }
                         sink.complete();
                         return;
                     }
                 }
-
                 sink.error(new RuntimeException("Array field '" + arrayField + "' not found"));
+
             } catch(Exception e){
                 sink.error(e);
             } finally {
@@ -98,21 +90,18 @@ public class Controller {
         });
     }
 
-    
+    // TODO: Write better logs for Exception handlers
+    private <T> void createEarthquakeInstance(T item){
+        try {
+            var featureObj = (Feature)item;
+            var quake = new Quake(featureObj);
+            quakeRepository.save(quake);
 
-    private void createEarthquakeInstances(Feature[] quakeData){
-        for (int i=0; i<quakeData.length; i++){
-            try {
-                // ********* Undo this with updated Feature class ************
-
-                // var quake = new Quake(quakeData[i].getProperties());
-                // quakeRepository.save(quake);
-
-            } catch (DataIntegrityViolationException e){
-                // Might need better log for Unique quake entry
-                System.out.println("Duplicate Earthquake Entry Attempted");
-                continue;
-            }
+        } catch (DataIntegrityViolationException e){
+            System.out.println("Duplicate Earthquake Entry Attempted");
+        } 
+        catch (ClassCastException e){
+            System.out.println("Incorrect Casting occured. Expected a Feature object\n" + e);
         }
     }
     
