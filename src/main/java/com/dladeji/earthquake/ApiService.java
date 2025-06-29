@@ -29,6 +29,7 @@ public class ApiService {
     private final String largeQueryUri = "/query?format=geojson&starttime=2024-06-20&endtime=2024-07-20";
     private final QuakeRepository quakeRepository;
 
+    // TODO: Make fetch faster somehow. Large query takes up a lot of time
     public int fetchDataFromApi(){
         var featureFlux = webClient.get()
                 .uri(largeQueryUri)
@@ -48,8 +49,7 @@ public class ApiService {
     */
 
 
-    /* TODO: Create a logger, especially for SQL queries
-    */
+    /* TODO: Create a logger, especially for SQL queries */
 
     private <T> Flux<T> parseResponseJsonArray(Flux<DataBuffer> dataBuffers, String arrayField, Class<T> classType){
         ObjectMapper mapper = new ObjectMapper();
