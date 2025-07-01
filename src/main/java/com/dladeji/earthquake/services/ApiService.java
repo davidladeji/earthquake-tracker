@@ -41,9 +41,6 @@ public class ApiService {
         return featureFlux.collectList().block().size();
     }
 
-
-    /* TODO: Create a logger, especially for SQL queries (aoi-starter LoggingFilter.java) */
-
     private <T> Flux<T> parseResponseJsonArray(Flux<DataBuffer> dataBuffers, String arrayField, Class<T> classType){
         ObjectMapper mapper = new ObjectMapper();
 

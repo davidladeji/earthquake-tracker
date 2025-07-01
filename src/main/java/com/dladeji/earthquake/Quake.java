@@ -1,6 +1,5 @@
 package com.dladeji.earthquake;
 
-import java.math.BigDecimal;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -55,10 +54,10 @@ public class Quake {
     private String quakeKey;
 
     @Column(name = "latitude")
-    private BigDecimal latitude;
+    private double latitude;
 
     @Column(name = "longtitude")
-    private BigDecimal longtitude;
+    private double longtitude;
 
     @Column(name = "depth")
     private double depth;
@@ -79,8 +78,8 @@ public class Quake {
         // TODO: Multiple casts need multiple error messages. Think of extracting to another func
         List<?> coordinateArr = (List<?>) quakeLocationData.get("coordinates");
         if (coordinateArr != null && coordinateArr.size() >= 3) {
-            this.latitude = new BigDecimal(String.valueOf(coordinateArr.get(1)));
-            this.longtitude = new BigDecimal(String.valueOf(coordinateArr.get(0)));
+            this.latitude = Double.valueOf(String.valueOf(coordinateArr.get(1)));
+            this.longtitude = Double.valueOf(String.valueOf(coordinateArr.get(0)));
             this.depth = Double.valueOf(String.valueOf(coordinateArr.get(2)));
         } else {
             System.out.println("Coordinate Array error occured");
