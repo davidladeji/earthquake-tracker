@@ -74,7 +74,7 @@ public class Quake {
         this.type = (String)quakeData.get("type");
         this.place = (String)quakeData.get("place");
         this.time = epochTimeConverter((long)quakeData.get("time"));
-        this.quakeKey = title + String.valueOf(quakeData.get("time"));
+        this.quakeKey = title + "_"+ String.valueOf(quakeData.get("time"));
 
         // TODO: Multiple casts need multiple error messages. Think of extracting to another func
         List<?> coordinateArr = (List<?>) quakeLocationData.get("coordinates");

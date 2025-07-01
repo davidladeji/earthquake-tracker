@@ -12,6 +12,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 
 import com.dladeji.earthquake.dtos.Feature;
 import com.dladeji.earthquake.dtos.QuakeCountDto;
+import com.dladeji.earthquake.dtos.QuakeDto;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -28,6 +29,7 @@ public class ApiService {
     private final String simpleQueryUri = "/query?format=geojson&starttime=2025-06-20&endtime=2026-06-20&alertlevel=green";
     private final String largeQueryUri = "/query?format=geojson&starttime=2024-06-20&endtime=2024-07-20";
     private final QuakeRepository quakeRepository;
+    private final double HIGH_MAGNITUDE_VAL = 5;
 
     // TODO: Make fetch faster somehow. Large query takes up a lot of time
     public int fetchDataFromApi(){
@@ -37,19 +39,20 @@ public class ApiService {
                 .bodyToFlux(DataBuffer.class)
                 .transform(dataBufferFlux -> parseResponseJsonArray(dataBufferFlux, "features", Feature.class));
 
-                return featureFlux.collectList().block().size();
+        return featureFlux.collectList().block().size();
     }
 
     public List<QuakeCountDto> getQuakeCounts(){
         return quakeRepository.getCountByType();
     }
 
-    /* TODO: Create a truly unique column to differentiate earthquake table entries
-       I'm thinking (Title) + (Time) in milliseconds as that is simpler
-    */
+    public List<QuakeDto> getHighMagQuakes(){
+        var result = quakeRepository.findByMagGreaterThan(HIGH_MAGNITUDE_VAL);
+        return result;
+    }
 
 
-    /* TODO: Create a logger, especially for SQL queries */
+    /* TODO: Create a logger, especially for SQL queries (aoi-starter LoggingFilter.java) */
 
     private <T> Flux<T> parseResponseJsonArray(Flux<DataBuffer> dataBuffers, String arrayField, Class<T> classType){
         ObjectMapper mapper = new ObjectMapper();

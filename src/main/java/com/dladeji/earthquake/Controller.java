@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.dladeji.earthquake.dtos.QuakeCountDto;
 
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 
 @RestController
@@ -25,12 +27,19 @@ public class Controller {
         return ResponseEntity.ok().body(responseSize);
     }
     
-    
+    // TODO: Extract below methods from apiService to a new QuakeService
     @GetMapping("/getCounts")
     public ResponseEntity<List<QuakeCountDto>> getQuakeCounts() {
         var result = apiService.getQuakeCounts();
         return ResponseEntity.ok().body(result);
     }
+
+    @GetMapping("/mags")
+    public ResponseEntity<?> getHighMagQuakes() {
+        var result = apiService.getHighMagQuakes();
+        return ResponseEntity.ok().body(result);
+    }
+    
 }
 
     
