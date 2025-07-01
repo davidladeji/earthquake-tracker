@@ -7,16 +7,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.dladeji.earthquake.dtos.QuakeCountDto;
+import com.dladeji.earthquake.services.ApiService;
+import com.dladeji.earthquake.services.QuakeService;
 
 import lombok.AllArgsConstructor;
-import org.springframework.web.bind.annotation.RequestParam;
-
-
 
 @RestController
 @AllArgsConstructor
 public class Controller {
-
+    private final QuakeService quakeService;
     private final ApiService apiService;
 
     // TODO: Make fetch occur at start of app
@@ -27,16 +26,15 @@ public class Controller {
         return ResponseEntity.ok().body(responseSize);
     }
     
-    // TODO: Extract below methods from apiService to a new QuakeService
     @GetMapping("/getCounts")
     public ResponseEntity<List<QuakeCountDto>> getQuakeCounts() {
-        var result = apiService.getQuakeCounts();
+        var result = quakeService.getQuakeCounts();
         return ResponseEntity.ok().body(result);
     }
 
     @GetMapping("/mags")
     public ResponseEntity<?> getHighMagQuakes() {
-        var result = apiService.getHighMagQuakes();
+        var result = quakeService.getHighMagQuakes();
         return ResponseEntity.ok().body(result);
     }
     

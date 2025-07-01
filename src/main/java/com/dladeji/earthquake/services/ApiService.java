@@ -1,8 +1,7 @@
-package com.dladeji.earthquake;
+package com.dladeji.earthquake.services;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.List;
 
 import org.springframework.core.io.buffer.DataBuffer;
 import org.springframework.core.io.buffer.DataBufferUtils;
@@ -10,9 +9,9 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
+import com.dladeji.earthquake.Quake;
+import com.dladeji.earthquake.QuakeRepository;
 import com.dladeji.earthquake.dtos.Feature;
-import com.dladeji.earthquake.dtos.QuakeCountDto;
-import com.dladeji.earthquake.dtos.QuakeDto;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;
@@ -29,7 +28,7 @@ public class ApiService {
     private final String simpleQueryUri = "/query?format=geojson&starttime=2025-06-20&endtime=2026-06-20&alertlevel=green";
     private final String largeQueryUri = "/query?format=geojson&starttime=2024-06-20&endtime=2024-07-20";
     private final QuakeRepository quakeRepository;
-    private final double HIGH_MAGNITUDE_VAL = 5;
+    
 
     // TODO: Make fetch faster somehow. Large query takes up a lot of time
     public int fetchDataFromApi(){
@@ -40,15 +39,6 @@ public class ApiService {
                 .transform(dataBufferFlux -> parseResponseJsonArray(dataBufferFlux, "features", Feature.class));
 
         return featureFlux.collectList().block().size();
-    }
-
-    public List<QuakeCountDto> getQuakeCounts(){
-        return quakeRepository.getCountByType();
-    }
-
-    public List<QuakeDto> getHighMagQuakes(){
-        var result = quakeRepository.findByMagGreaterThan(HIGH_MAGNITUDE_VAL);
-        return result;
     }
 
 
