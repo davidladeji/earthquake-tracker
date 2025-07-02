@@ -6,5 +6,4 @@ public interface QuakeDto {
     String getPlace();
     double getLatitude();
     double getLongtitude();
-    // depth needed??
 }

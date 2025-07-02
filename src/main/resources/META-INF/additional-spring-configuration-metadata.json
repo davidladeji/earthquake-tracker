@@ -1,0 +1,14 @@
+{"properties": [{
+  "name": "constants.large_query_uri",
+  "type": "java.lang.String",
+  "description": "A description for 'constants.large_query_uri'"
+}, {
+  "name": "constants.small_query_uri",
+  "type": "java.lang.String",
+  "description": "A description for 'constants.small_query_uri'"
+}, {
+  "name": "constants.base_url",
+  "type": "java.lang.String",
+  "description": "A description for 'constants.base_url'"
+}
+]}

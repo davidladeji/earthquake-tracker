@@ -7,3 +7,7 @@ spring:
         password: L1ftOff$
     flyway:
         baseline-on-migrate: true
+    constants:
+        base_url: "https://earthquake.usgs.gov/fdsnws/event/1/"
+        small_query_uri: "/query?format=geojson&starttime=2025-06-20&endtime=2026-06-20&alertlevel=green"
+        large_query_uri: "/query?format=geojson&starttime=2024-06-20&endtime=2024-07-20"

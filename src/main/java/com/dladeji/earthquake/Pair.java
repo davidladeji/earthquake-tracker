@@ -1,7 +1,5 @@
 package com.dladeji.earthquake;
 
-import org.springframework.stereotype.Component;
-
 import com.dladeji.earthquake.dtos.QuakeDto;
 
 import lombok.AllArgsConstructor;
@@ -14,3 +12,6 @@ public class Pair{
     private QuakeDto q2;
     private double distance;
 }
+
+// May need to make this accept generic objects
+// May need to transition away from Pair in the future

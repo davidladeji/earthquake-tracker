@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
 import com.dladeji.earthquake.Quake;
+import com.dladeji.earthquake.QuakeConfig;
 import com.dladeji.earthquake.QuakeRepository;
 import com.dladeji.earthquake.dtos.Feature;
 import com.fasterxml.jackson.core.JsonFactory;
@@ -24,16 +25,15 @@ import reactor.core.publisher.Flux;
 @Service
 @AllArgsConstructor
 public class ApiService {
-    private final WebClient webClient = WebClient.create("https://earthquake.usgs.gov/fdsnws/event/1/");
-    private final String simpleQueryUri = "/query?format=geojson&starttime=2025-06-20&endtime=2026-06-20&alertlevel=green";
-    private final String largeQueryUri = "/query?format=geojson&starttime=2024-06-20&endtime=2024-07-20";
+    private final QuakeConfig quakeConfig;
     private final QuakeRepository quakeRepository;
     
 
     // TODO: Make fetch faster somehow. Large query takes up a lot of time
     public int fetchDataFromApi(){
+        var webClient = WebClient.create(quakeConfig.getBaseUrl());
         var featureFlux = webClient.get()
-                .uri(largeQueryUri)
+                .uri(quakeConfig.getSmallQueryUri())
                 .retrieve()
                 .bodyToFlux(DataBuffer.class)
                 .transform(dataBufferFlux -> parseResponseJsonArray(dataBufferFlux, "features", Feature.class));
