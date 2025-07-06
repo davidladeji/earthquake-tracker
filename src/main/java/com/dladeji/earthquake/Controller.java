@@ -3,6 +3,7 @@ package com.dladeji.earthquake;
 import java.util.List;
 
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -11,7 +12,10 @@ import com.dladeji.earthquake.services.ApiService;
 import com.dladeji.earthquake.services.QuakeService;
 
 import lombok.AllArgsConstructor;
+import org.springframework.web.bind.annotation.RequestParam;
 
+
+@CrossOrigin(origins = "http://localhost:8081")
 @RestController
 @AllArgsConstructor
 public class Controller {
@@ -37,6 +41,13 @@ public class Controller {
         var result = quakeService.getHighMagQuakes();
         return ResponseEntity.ok().body(result);
     }
+
+    @GetMapping("/getQuakes")
+    public ResponseEntity<?> getAllQuakes() {
+        var response = quakeService.getAllQuakes();
+        return ResponseEntity.ok().body(response);
+    }
+    
     
 }
 

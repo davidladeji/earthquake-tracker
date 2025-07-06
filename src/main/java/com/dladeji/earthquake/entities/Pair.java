@@ -1,6 +1,6 @@
-package com.dladeji.earthquake;
+package com.dladeji.earthquake.entities;
 
-import com.dladeji.earthquake.dtos.QuakeDto;
+import com.dladeji.earthquake.dtos.QuakeDisplayDto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -8,8 +8,8 @@ import lombok.Data;
 @Data
 @AllArgsConstructor
 public class Pair{
-    private QuakeDto q1;
-    private QuakeDto q2;
+    private QuakeDisplayDto q1;
+    private QuakeDisplayDto q2;
     private double distance;
 }
 

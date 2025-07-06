@@ -9,10 +9,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import com.dladeji.earthquake.Quake;
 import com.dladeji.earthquake.QuakeConfig;
 import com.dladeji.earthquake.QuakeRepository;
 import com.dladeji.earthquake.dtos.Feature;
+import com.dladeji.earthquake.entities.Quake;
 import com.fasterxml.jackson.core.JsonFactory;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonToken;

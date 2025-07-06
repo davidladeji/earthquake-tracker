@@ -1,4 +1,4 @@
-package com.dladeji.earthquake;
+package com.dladeji.earthquake.entities;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
